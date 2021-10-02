@@ -10,22 +10,18 @@ using UnityEngine.InputSystem;
 public class PlayerCommands : MonoBehaviour
 {
     private CharacterController _characterController;
-
-    /* [Header("Camera Parameters")] [SerializeField]
-     private bool isInvertedY;
-     [SerializeField] private CinemachineFreeLook cameraFreeLook;
-     [SerializeField] private float lookSpeed;*/
-
+    
     private PlayerInputActions _playerInputActions;
 
-    [Header("Brut Parameters")] [SerializeField]
-    private Vector2 inputsVector;
+    [Header("Brut Parameters")]
+    private Vector2 _inputsVector;
 
-    [SerializeField] private Vector3 currentMovement, currentRunMovement, appliedMovement;
+    private Vector3 _currentMovement, _currentRunMovement;
+    [SerializeField] private Vector3 appliedMovement;
     [SerializeField] private bool isMovementPressed, isRunPressed;
     [SerializeField] private Animator animator;
     private Quaternion _camRot;
-    [SerializeField] private Transform camera;
+    private Transform _camera;
 
     [Header("Multiplier Parameters")] [SerializeField]
     private float rotationPower = 1f;
@@ -65,7 +61,7 @@ public class PlayerCommands : MonoBehaviour
         _playerInputActions.Player.Jump.started += OnJump;
         _playerInputActions.Player.Jump.canceled += OnJump;
 
-
+        _camera = Camera.main.transform;
         _isWalkingHash = Animator.StringToHash("isWalking");
         _isRunningHash = Animator.StringToHash("isRunning");
         _isJumpingHash = Animator.StringToHash("isJumping");
@@ -109,7 +105,7 @@ public class PlayerCommands : MonoBehaviour
             _isJumping = true;
             _jumpCount += 1;
             animator.SetInteger(_jumpCountHash, _jumpCount);
-            currentMovement.y = _initialJumpVelocities[_jumpCount];
+            _currentMovement.y = _initialJumpVelocities[_jumpCount];
             appliedMovement.y = _initialJumpVelocities[_jumpCount];
         }
 
@@ -137,13 +133,13 @@ public class PlayerCommands : MonoBehaviour
 
         if (isRunPressed)
         {
-            appliedMovement.x = currentRunMovement.x;
-            appliedMovement.z = currentRunMovement.z;
+            appliedMovement.x = _currentRunMovement.x;
+            appliedMovement.z = _currentRunMovement.z;
         }
         else
         {
-            appliedMovement.x = currentMovement.x;
-            appliedMovement.z = currentRunMovement.z;
+            appliedMovement.x = _currentMovement.x;
+            appliedMovement.z = _currentRunMovement.z;
         }
 
         Vector3 movement = _camRot * appliedMovement;
@@ -162,7 +158,7 @@ public class PlayerCommands : MonoBehaviour
 
     void HandleGravity()
     {
-        bool isFalling = currentMovement.y <= 0.0f || !isJumpPressed;
+        bool isFalling = _currentMovement.y <= 0.0f || !isJumpPressed;
         float fallMultiplier = 2.0f;
 
         //Permet d'appliquer de la gravité dépendant si le joueur en contact avec le sol ou pas
@@ -180,30 +176,30 @@ public class PlayerCommands : MonoBehaviour
                 }
             }
           
-            currentMovement.y = _groundedGravity;
+            _currentMovement.y = _groundedGravity;
             appliedMovement.y = _groundedGravity;
         }
         else if (isFalling) //Le joueur est entrain de tomber
         {
-            float previousYVelocity = currentMovement.y;
-            currentMovement.y = currentMovement.y + (_jumpGravities[_jumpCount] * fallMultiplier * Time.deltaTime);
-            appliedMovement.y = Mathf.Max((previousYVelocity + currentMovement.y) * 0.5f, -20.0f);
+            float previousYVelocity = _currentMovement.y;
+            _currentMovement.y = _currentMovement.y + (_jumpGravities[_jumpCount] * fallMultiplier * Time.deltaTime);
+            appliedMovement.y = Mathf.Max((previousYVelocity + _currentMovement.y) * 0.5f, -20.0f);
         }
         else
         {
             //Velocity Verlet intégration
             //On récupère la vélocité Y du player donc l'ancienne
-            float previousYVelocity = currentMovement.y;
+            float previousYVelocity = _currentMovement.y;
             // On calcule la nouvelle vélocité
-            currentMovement.y = currentMovement.y + (_jumpGravities[_jumpCount] * Time.deltaTime);
+            _currentMovement.y = _currentMovement.y + (_jumpGravities[_jumpCount] * Time.deltaTime);
             //On calcule la next velocité en combinant l'ancienne et la nouvelle
-            appliedMovement.y = (previousYVelocity + currentMovement.y) * 0.5f;
+            appliedMovement.y = (previousYVelocity + _currentMovement.y) * 0.5f;
         }
     }
 
     void HandleRotation()
     {
-        Vector3 camForward = camera.forward;
+        Vector3 camForward = _camera.forward;
         camForward.y = 0f;
         _camRot = Quaternion.LookRotation(camForward); 
         
@@ -212,7 +208,7 @@ public class PlayerCommands : MonoBehaviour
         if (isMovementPressed)
         {
             
-            float targetAngle = Mathf.Atan2(inputsVector.x, inputsVector.y) * Mathf.Rad2Deg + camera.eulerAngles.y;
+            float targetAngle = Mathf.Atan2(_inputsVector.x, _inputsVector.y) * Mathf.Rad2Deg + _camera.eulerAngles.y;
             //Rotation créer avec le movement du joueur
             Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
             //Rotation final slerp
@@ -249,12 +245,12 @@ public class PlayerCommands : MonoBehaviour
     void OnMovementInput(InputAction.CallbackContext context)
     {
         //On récupère grace au context la valeur des inputs
-        inputsVector = context.ReadValue<Vector2>();
-        currentMovement.x = inputsVector.x;
-        currentMovement.z = inputsVector.y;
-        currentRunMovement.x = inputsVector.x * runMultiplier;
-        currentRunMovement.z = inputsVector.y * runMultiplier;
-        isMovementPressed = inputsVector.x != 0 || inputsVector.y != 0;
+        _inputsVector = context.ReadValue<Vector2>();
+        _currentMovement.x = _inputsVector.x;
+        _currentMovement.z = _inputsVector.y;
+        _currentRunMovement.x = _inputsVector.x * runMultiplier;
+        _currentRunMovement.z = _inputsVector.y * runMultiplier;
+        isMovementPressed = _inputsVector.x != 0 || _inputsVector.y != 0;
     }
 
 
