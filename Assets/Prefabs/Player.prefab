@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &785615481207406636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6383338645454937192}
+  m_Layer: 0
+  m_Name: FollowTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6383338645454937192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 785615481207406636}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3949016651253676939}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3949016651253676943
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,11 +40,12 @@ GameObject:
   m_Component:
   - component: {fileID: 3949016651253676939}
   - component: {fileID: 3949016651253676934}
+  - component: {fileID: 5032336086179006674}
   - component: {fileID: 3949016651253676937}
   - component: {fileID: 3949016651253676940}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,6 +62,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8338148035963664168}
+  - {fileID: 6383338645454937192}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -52,9 +84,31 @@ MonoBehaviour:
   animator: {fileID: 2106856382877178450}
   rotationPower: 15
   runMultiplier: 4
+  walkMultiplier: 2
   isJumpPressed: 0
   maxJumpHeight: 2
   maxJumpTime: 0.75
+  cinemachineVirtualCameraFollowTarget: {fileID: 785615481207406636}
+  topClamp: 30
+  cameraRotationSpeed: 10
+  bottomClamp: -50
+  cameraAngleOverride: 12
+--- !u!114 &5032336086179006674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3949016651253676943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dda7b273c9edb6d43ae177fdb2ccb519, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimVirtualCamera: {fileID: 0}
+  isAiming: 0
+  aimSensitivity: 5
+  normalSensitivity: 0
 --- !u!114 &3949016651253676937
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,11 +10,10 @@ using UnityEngine.InputSystem;
 public class PlayerCommands : MonoBehaviour
 {
     private CharacterController _characterController;
-    
-    private PlayerInputActions _playerInputActions;
+    private PlayerThirdPersonShoot _playerThirdPersonShoot;
+    public PlayerInputActions playerInputActions;
 
-    [Header("Brut Parameters")]
-    private Vector2 _inputsVector;
+    [Header("Brut Parameters")] private Vector2 _inputsVector;
 
     private Vector3 _currentMovement, _currentRunMovement;
     [SerializeField] private Vector3 appliedMovement;
@@ -27,6 +26,7 @@ public class PlayerCommands : MonoBehaviour
     private float rotationPower = 1f;
 
     [SerializeField] private float runMultiplier = 3f;
+    [SerializeField] private float walkMultiplier = 2f;
     private float _gravity = -9.8f;
     private float _groundedGravity = -0.5f;
 
@@ -48,18 +48,36 @@ public class PlayerCommands : MonoBehaviour
     private Dictionary<int, float> _jumpGravities = new Dictionary<int, float>();
     private Coroutine _currentJumpResetRoutine;
 
+    [Header("Camera Parameters")]
+    [SerializeField] private GameObject cinemachineVirtualCameraFollowTarget;
+    private Vector2 _lookInputs;
+    private float _threshold = 0.01f;
+    private float _cinemachineTargetYaw;
+    private float _cinemachineTargetPitch;
+    [Tooltip("How far in degrees can you move the camera up")]
+    public float topClamp = 70.0f;
+    public float cameraRotationSpeed;
+    [Tooltip("How far in degrees can you move the camera down")]
+    public float bottomClamp = -30.0f;
+    [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
+    public float cameraAngleOverride = 0.0f;
+
     private void Awake()
     {
         _characterController = gameObject.GetComponent<CharacterController>();
+        _playerThirdPersonShoot = GetComponent<PlayerThirdPersonShoot>();
         //Player Inputs callback 
-        _playerInputActions = new PlayerInputActions();
-        _playerInputActions.Player.Movement.started += OnMovementInput;
-        _playerInputActions.Player.Movement.canceled += OnMovementInput;
-        _playerInputActions.Player.Movement.performed += OnMovementInput;
-        _playerInputActions.Player.Run.started += OnRun;
-        _playerInputActions.Player.Run.canceled += OnRun;
-        _playerInputActions.Player.Jump.started += OnJump;
-        _playerInputActions.Player.Jump.canceled += OnJump;
+        playerInputActions = new PlayerInputActions();
+        playerInputActions.Player.Movement.started += OnMovementInput;
+        playerInputActions.Player.Movement.canceled += OnMovementInput;
+        playerInputActions.Player.Movement.performed += OnMovementInput;
+        playerInputActions.Player.Run.started += OnRun;
+        playerInputActions.Player.Run.canceled += OnRun;
+        playerInputActions.Player.Jump.started += OnJump;
+        playerInputActions.Player.Jump.canceled += OnJump;
+        playerInputActions.Player.Look.started += LookOnstarted;
+        playerInputActions.Player.Look.canceled += LookOnstarted;
+        playerInputActions.Player.Look.performed += LookOnstarted;
 
         _camera = Camera.main.transform;
         _isWalkingHash = Animator.StringToHash("isWalking");
@@ -68,8 +86,12 @@ public class PlayerCommands : MonoBehaviour
         _jumpCountHash = Animator.StringToHash("jumpCount");
         SetJumpVariables();
     }
-  
-    
+
+    private void LookOnstarted(InputAction.CallbackContext context)
+    {
+        _lookInputs = context.ReadValue<Vector2>();
+    }
+
 
     void SetJumpVariables()
     {
@@ -139,16 +161,41 @@ public class PlayerCommands : MonoBehaviour
         else
         {
             appliedMovement.x = _currentMovement.x;
-            appliedMovement.z = _currentRunMovement.z;
+            appliedMovement.z = _currentMovement.z;
+        }
+
+        if (_playerThirdPersonShoot.isAiming)
+        {
+            _characterController.Move(transform.TransformDirection(appliedMovement) * Time.deltaTime);
         }
 
         Vector3 movement = _camRot * appliedMovement;
         _characterController.Move(movement * Time.deltaTime);
-       
+
 
         HandleGravity();
         HandleJump();
-       
+    }
+
+    private void LateUpdate()
+    {
+        CameraRotation();
+    }
+
+    void CameraRotation()
+    {
+        if (_lookInputs.sqrMagnitude >= _threshold)
+        {
+            _cinemachineTargetYaw += _lookInputs.x * cameraRotationSpeed * Time.deltaTime;
+            _cinemachineTargetPitch += _lookInputs.y * cameraRotationSpeed * Time.deltaTime;
+        }
+
+        // clamp our rotations so our values are limited 360 degrees
+        _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, bottomClamp, topClamp);
+        //Cinemachine will follow this target
+        cinemachineVirtualCameraFollowTarget.transform.rotation =
+            Quaternion.Euler(_cinemachineTargetPitch + cameraAngleOverride, _cinemachineTargetYaw, 0.0f);
     }
 
     void OnRun(InputAction.CallbackContext context)
@@ -175,7 +222,7 @@ public class PlayerCommands : MonoBehaviour
                     animator.SetInteger(_jumpCountHash, _jumpCount);
                 }
             }
-          
+
             _currentMovement.y = _groundedGravity;
             appliedMovement.y = _groundedGravity;
         }
@@ -201,19 +248,17 @@ public class PlayerCommands : MonoBehaviour
     {
         Vector3 camForward = _camera.forward;
         camForward.y = 0f;
-        _camRot = Quaternion.LookRotation(camForward); 
-        
+        _camRot = Quaternion.LookRotation(camForward);
+
         //rotation actuel du joueur
         Quaternion currentRotation = transform.rotation;
-        if (isMovementPressed)
+        if (isMovementPressed && !_playerThirdPersonShoot.isAiming)
         {
-            
             float targetAngle = Mathf.Atan2(_inputsVector.x, _inputsVector.y) * Mathf.Rad2Deg + _camera.eulerAngles.y;
             //Rotation créer avec le movement du joueur
             Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
             //Rotation final slerp
             transform.rotation = Quaternion.Slerp(currentRotation, rot, rotationPower * Time.deltaTime);
-            
         }
     }
 
@@ -246,21 +291,32 @@ public class PlayerCommands : MonoBehaviour
     {
         //On récupère grace au context la valeur des inputs
         _inputsVector = context.ReadValue<Vector2>();
-        _currentMovement.x = _inputsVector.x;
-        _currentMovement.z = _inputsVector.y;
+        _currentMovement.x = _inputsVector.x * walkMultiplier;
+        _currentMovement.z = _inputsVector.y * walkMultiplier;
         _currentRunMovement.x = _inputsVector.x * runMultiplier;
         _currentRunMovement.z = _inputsVector.y * runMultiplier;
         isMovementPressed = _inputsVector.x != 0 || _inputsVector.y != 0;
     }
 
+    private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+    {
+        if (lfAngle < -360f) lfAngle += 360f;
+        if (lfAngle > 360f) lfAngle -= 360f;
+        return Mathf.Clamp(lfAngle, lfMin, lfMax);
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        cameraRotationSpeed = sensitivity;
+    }
 
     private void OnEnable()
     {
-        _playerInputActions.Player.Enable();
+        playerInputActions.Player.Enable();
     }
 
     private void OnDisable()
     {
-        _playerInputActions.Player.Disable();
+        playerInputActions.Player.Disable();
     }
 }
