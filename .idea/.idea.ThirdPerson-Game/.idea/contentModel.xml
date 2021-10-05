@@ -22,6 +22,7 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="BulletBehavior.cs" t="Include" />
           <e p="PlayerCommands.cs" t="Include" />
           <e p="PlayerInputActions.cs" t="Include" />
           <e p="PlayerThirdPersonShoot.cs" t="Include" />

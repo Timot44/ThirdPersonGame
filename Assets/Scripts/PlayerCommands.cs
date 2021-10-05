@@ -258,7 +258,12 @@ public class PlayerCommands : MonoBehaviour
             //Rotation créer avec le movement du joueur
             Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
             //Rotation final slerp
-            transform.rotation = Quaternion.Slerp(currentRotation, rot, rotationPower * Time.deltaTime);
+            if (!_playerThirdPersonShoot.isAiming)
+            {
+                transform.rotation = Quaternion.Slerp(currentRotation, rot, rotationPower * Time.deltaTime);
+            }
+           
+            
         }
     }
 
