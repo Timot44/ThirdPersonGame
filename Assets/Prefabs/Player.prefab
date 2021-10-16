@@ -145,6 +145,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   aimRotatePower: 20
+  switchToAimAnimWeight: 10
   crosshairImg: {fileID: 0}
   projectile: {fileID: 0}
   projectileSpawnPosition: {fileID: 4763720323336325914}

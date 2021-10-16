@@ -15,7 +15,8 @@ public class PlayerThirdPersonShoot : MonoBehaviour
     [SerializeField] private LayerMask layers;
     [SerializeField]
     private float aimRotatePower = 0.15f;
-    
+
+    [SerializeField] private float switchToAimAnimWeight;
     [SerializeField] private GameObject crosshairImg;
     private Vector3 worldMousePosition;
     [SerializeField] private GameObject projectile;
@@ -52,6 +53,7 @@ public class PlayerThirdPersonShoot : MonoBehaviour
         if (isAiming)
         {
             aimVirtualCamera.gameObject.SetActive(true);
+            _playerCommands.animator.SetLayerWeight(1, Mathf.Lerp(_playerCommands.animator.GetLayerWeight(1), 1f, Time.deltaTime * switchToAimAnimWeight));
             _playerCommands.SetSensitivity(aimSensitivity);
             crosshairImg.SetActive(true);
             worldMousePosition = Vector3.zero;
@@ -73,6 +75,7 @@ public class PlayerThirdPersonShoot : MonoBehaviour
         else if (!isAiming)
         {
             aimVirtualCamera.gameObject.SetActive(false);
+            _playerCommands.animator.SetLayerWeight(1, Mathf.Lerp(_playerCommands.animator.GetLayerWeight(1), 0f, Time.deltaTime * switchToAimAnimWeight));
             crosshairImg.SetActive(false);
             _playerCommands.SetSensitivity(normalSensitivity);
         }

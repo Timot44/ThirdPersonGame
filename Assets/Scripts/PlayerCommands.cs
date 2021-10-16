@@ -18,7 +18,7 @@ public class PlayerCommands : MonoBehaviour
     private Vector3 _currentMovement, _currentRunMovement;
     [SerializeField] private Vector3 appliedMovement;
     [SerializeField] private bool isMovementPressed, isRunPressed;
-    [SerializeField] private Animator animator;
+    public Animator animator;
     private Quaternion _camRot;
     private Transform _camera;
 

@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f08d2fa-4eea-4f49-99d2-897e7469c3b5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/contentModel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/CharacterAnimationController.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/CharacterAnimationController.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/BulletTest.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/BulletTest.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Player.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerCommands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerCommands.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerInputActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerInputActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerInputActions.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerInputActions.inputactions" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerThirdPersonShoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerThirdPersonShoot.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,14 +30,15 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/PlayerThirdPersonShoot.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scenes/MainScene.unity" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/WeaponBehavior.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Prefabs/BulletTest.prefab" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Assets/Scripts/PlayerInput.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/WeaponBehavior.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerCommands.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/BulletBehavior.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerCommands.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/PlayerThirdPersonShoot.cs" />
       </list>
     </option>
@@ -101,6 +100,7 @@
       <workItem from="1633289712899" duration="3479000" />
       <workItem from="1633347425327" duration="2330000" />
       <workItem from="1633430509064" duration="2917000" />
+      <workItem from="1634240612360" duration="2059000" />
     </task>
     <servers />
   </component>
