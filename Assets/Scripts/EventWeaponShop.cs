@@ -8,12 +8,12 @@ public class EventWeaponShop : MonoBehaviour
     [SerializeField] private Transform player;
 
     [SerializeField] private float detectionRange = 1f;
-
+    private Camera _camera;
     [SerializeField] private GameObject uiShopGo;
     // Start is called before the first frame update
     void Start()
     {
-        
+        _camera = Camera.main;
     }
 
     // Update is called once per frame
@@ -33,8 +33,13 @@ public class EventWeaponShop : MonoBehaviour
         {
             if (Vector3.Distance(gameObject.transform.position, player.transform.position) <= detectionRange)
             {
-                Debug.Log("Player is close enough !!");
-                uiShopGo.SetActive(true);
+              
+                if (uiShopGo.activeSelf != true)
+                {
+                    uiShopGo.SetActive(true);
+                  
+                }
+                uiShopGo.transform.LookAt(_camera.transform, Vector3.up);
             }
             else
             {
