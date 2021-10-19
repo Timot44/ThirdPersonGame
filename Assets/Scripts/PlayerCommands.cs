@@ -15,9 +15,9 @@ public class PlayerCommands : MonoBehaviour
 
     [Header("Brut Parameters")] private Vector2 _inputsVector;
 
-    private Vector3 _currentMovement, _currentRunMovement;
+    public Vector3 _currentMovement, _currentRunMovement;
     [SerializeField] private Vector3 appliedMovement;
-    [SerializeField] private bool isMovementPressed, isRunPressed;
+    [SerializeField] public bool isMovementPressed, isRunPressed;
     public Animator animator;
     private Quaternion _camRot;
     private Transform _camera;
@@ -32,7 +32,7 @@ public class PlayerCommands : MonoBehaviour
 
     private int _isWalkingHash;
     private int _isRunningHash;
-
+   
     [Header("Jump Parameters")] [SerializeField]
     private bool isJumpPressed;
 
@@ -66,6 +66,8 @@ public class PlayerCommands : MonoBehaviour
     {
         _characterController = gameObject.GetComponent<CharacterController>();
         _playerThirdPersonShoot = GetComponent<PlayerThirdPersonShoot>();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         //Player Inputs callback 
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Movement.started += OnMovementInput;
@@ -272,16 +274,17 @@ public class PlayerCommands : MonoBehaviour
     {
         bool isWalking = animator.GetBool(_isWalkingHash);
         bool isRunning = animator.GetBool(_isRunningHash);
-
+     
         if (isMovementPressed && !isWalking)
         {
             animator.SetBool(_isWalkingHash, true);
+           
         }
         else if (!isMovementPressed && isWalking)
         {
             animator.SetBool(_isWalkingHash, false);
         }
-
+        
         if (isMovementPressed && isRunPressed && !isRunning)
         {
             animator.SetBool(_isRunningHash, true);

@@ -13,14 +13,15 @@ public class PlayerThirdPersonShoot : MonoBehaviour
     public float aimSensitivity;
     public float normalSensitivity;
     [SerializeField] private LayerMask layers;
-    [SerializeField]
-    private float aimRotatePower = 0.15f;
+    [SerializeField] private float aimRotatePower = 0.15f;
+
 
     [SerializeField] private float switchToAimAnimWeight;
     [SerializeField] private GameObject crosshairImg;
     private Vector3 worldMousePosition;
     [SerializeField] private GameObject projectile;
     [SerializeField] private Transform projectileSpawnPosition;
+
     private void Start()
     {
         _playerCommands = GetComponent<PlayerCommands>();
@@ -58,9 +59,9 @@ public class PlayerThirdPersonShoot : MonoBehaviour
             crosshairImg.SetActive(true);
             worldMousePosition = Vector3.zero;
             //Récupère la pos du milieux de l'écran
-             Vector2 middleScreenPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Vector2 middleScreenPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
             Ray ray = Camera.main.ScreenPointToRay(middleScreenPosition);
-            
+
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 9999, layers))
             {
                 worldMousePosition = raycastHit.point;
@@ -75,7 +76,9 @@ public class PlayerThirdPersonShoot : MonoBehaviour
         else if (!isAiming)
         {
             aimVirtualCamera.gameObject.SetActive(false);
-            _playerCommands.animator.SetLayerWeight(1, Mathf.Lerp(_playerCommands.animator.GetLayerWeight(1), 0f, Time.deltaTime * switchToAimAnimWeight));
+            _playerCommands.animator.SetLayerWeight(1,
+                Mathf.Lerp(_playerCommands.animator.GetLayerWeight(1), 0f, Time.deltaTime * switchToAimAnimWeight));
+
             crosshairImg.SetActive(false);
             _playerCommands.SetSensitivity(normalSensitivity);
         }
@@ -86,7 +89,8 @@ public class PlayerThirdPersonShoot : MonoBehaviour
         if (isShooting)
         {
             Vector3 aimDirection = (worldMousePosition - projectileSpawnPosition.position).normalized;
-            Instantiate(projectile, projectileSpawnPosition.position, Quaternion.LookRotation(aimDirection, Vector3.up));
+            Instantiate(projectile, projectileSpawnPosition.position,
+                Quaternion.LookRotation(aimDirection, Vector3.up));
             isShooting = false;
         }
     }
