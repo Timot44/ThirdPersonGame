@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f08d2fa-4eea-4f49-99d2-897e7469c3b5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ThirdPerson-Game/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EventWeaponShop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/EventWeaponShop.cs" afterDir="false" />
-    </list>
+    <list default="true" id="2f08d2fa-4eea-4f49-99d2-897e7469c3b5" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -110,7 +110,7 @@
       <workItem from="1634403963506" duration="1625000" />
       <workItem from="1634557523577" duration="34000" />
       <workItem from="1634589605736" duration="799000" />
-      <workItem from="1634674499899" duration="682000" />
+      <workItem from="1634674499899" duration="1027000" />
     </task>
     <servers />
   </component>
